@@ -1,0 +1,33 @@
+{
+  "name": "express-metrics",
+  "description": "Express middleware for collecting and reporting metrics about response times",
+  "version": "0.1.0",
+  "author": "Daniel García Aubert <danielgarciaaubert@gmail.com>",
+  "main": "index.js",
+  "dependencies": {
+    "metrics": "latest"
+  },
+  "devDependencies": {
+    "jshint": "latest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/dgaubert/express-metrics.git"
+  },
+  "scripts": {
+    "test": "mocha test/**/*.spec.js",
+    "test:watch": "npm run test -- -w",
+    "lint": "jshint *.js"
+  },
+  "keywords": [
+    "nodejs",
+    "express",
+    "middleware",
+    "metrics",
+    "statsd"
+  ],
+  "bugs": {
+    "url": "https://github.com/dgaubert/express-metrics/issues"
+  },
+  "license": "MIT"
+}

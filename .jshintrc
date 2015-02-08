@@ -1,0 +1,5 @@
+{
+  "maxerr": 10,
+  "mocha": true,
+  "node": true,
+}
