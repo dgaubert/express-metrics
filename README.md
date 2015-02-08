@@ -24,7 +24,7 @@ app.use(metrics(app));
 
 app.get('/', function (req, res, next) {
   res.json({greet: 'Helo world!'});
-}
+});
 ```
 
 ## Contributions
