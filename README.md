@@ -7,7 +7,7 @@ Express middleware for collecting and reporting metrics about response times.
 Node.js, on project path:
 
 ```
-npm install express-metrics
+npm install express-metrics --save
 ```
 
 ## Examples
@@ -20,7 +20,10 @@ var metrics = require('express-metrics');
 var app = express();
 
 // add '/metrics' route to summary the response times
-app.use(metrics(app));
+app.use(metrics());
+
+// response a json with the metrics collected
+app.get('/metrics', metrics.summary);
 
 // express-metrics will record the response time for every time this handler returns
 // the greet
@@ -29,7 +32,7 @@ app.get('/', function (req, res, next) {
 });
 ```
 
-then, in /metrics path, you  will see:
+In /metrics path, you  will see:
 ```js
 {
   'GET_/': {
@@ -61,22 +64,15 @@ then, in /metrics path, you  will see:
   }
 }
 ```
-_Note:_ requests are grouped by method and path. Also, metrics for all request are added.
+_Note:_ requests are grouped by method and path. Also, metrics for all requests are added.
 
-If you want change the default route to metrics:
+If you want to do something with the collected data:
 
 ```js
-var express = require('express');
-var metrics = require('express-metrics');
-var app = express();
-
-app.use(metrics());
-
-app.get('/', function (req, res, next) {
-  res.json({greet: 'Helo world!'});
+app.get('/metrics', function (req, res, next) {
+  var homeMetrics = metrics.getData()['GET_/']; // only home requests
+  res.render('path/to/template', {home: homeMetrics});
 });
-
-app.get('/custom', metrics.summary);
 ```
 
 ## Contributions
