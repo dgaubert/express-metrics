@@ -1,7 +1,7 @@
 var Metrics = require('metrics');
 var report = new Metrics.Report();
 
-module.exports = function metrics(prefix) {
+function metrics(prefix) {
   var CATEGORIES = {
     requests: 'requests',
     static: 'static_path',
@@ -56,13 +56,17 @@ module.exports = function metrics(prefix) {
 
     next();
   };
-};
+}
 
-module.exports.getData = function getData() {
-  // avoid wrapper object
+function getSummary() {
+  // avoid wrapped object
   return report.summary()[''];
-};
+}
 
-module.exports.summary = function summary(req, res, next) {
-  res.json(getData());
-};
+function reporter(req, res, next) {
+  res.json(getSummary());
+}
+
+module.exports = metrics;
+module.exports.getSummary = getSummary;
+module.exports.reporter = reporter;
