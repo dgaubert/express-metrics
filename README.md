@@ -21,13 +21,13 @@ var app = express();
 
 app.use(metrics());
 
-// returns a json with the summary of metrics
-app.get('/metrics', metrics.reporter);
+// it responds a JSON with a summary of metrics
+app.get('/metrics', metrics.jsonSummary);
 
-// every time this handler returns the greet, express-metrics
+// every time this handler returns the greet, the middleware
 // will update the metrics with the calculated response time
 app.get('/', function (req, res, next) {
-  res.json({greet: 'Helo world!'});
+  res.json({ greet: 'Hello world!' });
 });
 ```
 
@@ -63,14 +63,17 @@ In /metrics path, you  will see:
   }
 }
 ```
-_Note:_ requests are grouped by method and path. Also, metrics for all requests are added.
+Metrics are grouped by:
+  - method and path (i.e. GET_/)
+  - response status (i.e. status_200)
+  - all requests
 
 If you want to do something with the collected data:
 
 ```js
 app.get('/metrics', function (req, res, next) {
-  var homeMetrics = metrics.getSummary()['GET_/']; // only home requests
-  res.render('path/to/template', {home: homeMetrics});
+  var homeMetrics = metrics.getSummary()['GET_/']; // only home metrics
+  res.render('path/to/template', { home: homeMetrics });
 });
 ```
 
