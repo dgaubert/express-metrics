@@ -19,14 +19,13 @@ var express = require('express');
 var metrics = require('express-metrics');
 var app = express();
 
-// add '/metrics' route to summary the response times
 app.use(metrics());
 
-// response a json with the metrics collected
-app.get('/metrics', metrics.summary);
+// returns a json with the summary of metrics
+app.get('/metrics', metrics.reporter);
 
-// express-metrics will record the response time for every time this handler returns
-// the greet
+// every time this handler returns the greet, express-metrics
+// will update the metrics with the calculated response time
 app.get('/', function (req, res, next) {
   res.json({greet: 'Helo world!'});
 });
@@ -70,7 +69,7 @@ If you want to do something with the collected data:
 
 ```js
 app.get('/metrics', function (req, res, next) {
-  var homeMetrics = metrics.getData()['GET_/']; // only home requests
+  var homeMetrics = metrics.getSummary()['GET_/']; // only home requests
   res.render('path/to/template', {home: homeMetrics});
 });
 ```
