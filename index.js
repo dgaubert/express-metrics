@@ -1,25 +1,12 @@
 var Metrics = require('metrics');
 var report = new Metrics.Report();
 
-function summary(req, res, next) {
-  // hack for report summary, wraps object over another one!!!
-  res.json(report.summary()['']);
-}
-
-function metrics(app, prefix) {
+module.exports = function metrics(prefix) {
   var CATEGORIES = {
     requests: 'requests',
     static: 'static_path',
     status: 'request_status_'
   };
-
-  if (typeof app === "function") {
-    app.get('/metrics', summary);
-  }
-
-  if (!prefix && typeof app === "string") {
-    prefix = app;
-  }
 
   if (typeof prefix === "string") {
     Object.keys().forEach(function (key) {
@@ -69,7 +56,13 @@ function metrics(app, prefix) {
 
     next();
   };
-}
+};
 
-module.exports = metrics;
-module.exports.summary = summary;
+module.exports.getData = function getData() {
+  // avoid wrapper object
+  return report.summary()[''];
+};
+
+module.exports.summary = function summary(req, res, next) {
+  res.json(getData());
+};
