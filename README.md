@@ -76,6 +76,17 @@ app.get('/metrics', function (req, res, next) {
   res.render('path/to/template', { home: homeMetrics });
 });
 ```
+## Options
+
+You can pass options to the middleware, like this:
+```js
+app.use(metrics({ decimals: true }));
+
+```
+
+### decimals: Boolean (default: false)
+
+If decimals is __true__, times are measured in millisecond with three decimals. Otherwise, times are rounded to milliseconds.
 
 ## Contributions
 
@@ -87,7 +98,7 @@ Do you want to contribute?. Please, follow the below suggestions:
 
 ## Change history
 
-To view change history, please visit: [history.md](https://github.com/dgaubert/express-metrics)
+To view change history, please visit: [HISTORY.md](https://github.com/dgaubert/express-metrics/blob/master/HISTORY.md)
 
 Versioning strategy:
 
@@ -97,4 +108,4 @@ Versioning strategy:
 
 ## License
 
-To view the MIT license, please visit: [The MIT License (MIT)](https://github.com/dgaubert/express-metrics)
+To view the MIT license, please visit: [The MIT License (MIT)](https://github.com/dgaubert/express-metrics/blob/master/LICENSE)

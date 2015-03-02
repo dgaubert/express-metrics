@@ -1,12 +1,27 @@
 var Metrics = require('metrics');
 var report = new Metrics.Report();
 
-function metrics() {
+function metrics(options) {
+  options = (typeof options === 'undefined') ? {} : options;
+
   var CATEGORIES = {
     all: 'all',
     static: 'static', // i.e. "/favicon.ico"
     status: 'status' // i.e. "status_200"
   };
+
+  function timer(start) {
+    if (!start) {
+      return process.hrtime();
+    }
+
+    var diff = process.hrtime(start);
+    var nanoseconds = diff[0] * 1e9 + diff[1];
+
+    return options.decimals ?
+      Math.round(nanoseconds / 1e3) / 1e3 : // time in ms with 3 decimals
+      Math.round(nanoseconds / 1e6); // rounded time to ms
+  }
 
   function updateMetric(name, time) {
     if (!report.getMetric(name)) {
@@ -33,7 +48,7 @@ function metrics() {
   }
 
   return function (req, res, next) {
-    var startTime = new Date();
+    var startAt = timer();
 
     // decorate response#end method from express
     var end = res.end;
@@ -43,7 +58,7 @@ function metrics() {
       end.apply(res, arguments);
 
       var metricName = getMetricName(req.route, req.method);
-      var responseTime = new Date() - startTime;
+      var responseTime = timer(startAt);
 
       updateMetric(CATEGORIES.all, responseTime);
       updateMetric(CATEGORIES.status + '_' + res.statusCode, responseTime);
