@@ -1,3 +1,6 @@
+## 0.3.0
+  - Now options can be passed for customization. 
+
 ## 0.2.0
   - new API:
     - summary -> jsonSummary
