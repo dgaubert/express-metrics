@@ -53,12 +53,16 @@ function metrics(options) {
     // decorate response#end method from express
     var end = res.end;
     res.end = function () {
+      var responseTime = timer(startAt);
+
+      if (options.header) {
+        res.setHeader('X-Response-Time', responseTime + 'ms');
+      }
 
       // call to original express#res.end()
       end.apply(res, arguments);
 
       var metricName = getMetricName(req.route, req.method);
-      var responseTime = timer(startAt);
 
       updateMetric(CATEGORIES.all, responseTime);
       updateMetric(CATEGORIES.status + '_' + res.statusCode, responseTime);
