@@ -47,6 +47,14 @@ function metrics(options) {
     return routeName;
   }
 
+  function updateMetrics(req, res, responseTime) {
+    var metricName = getMetricName(req.route, req.method);
+
+    updateMetric(CATEGORIES.all, responseTime);
+    updateMetric(CATEGORIES.status + '_' + res.statusCode, responseTime);
+    updateMetric(metricName, responseTime);
+  }
+
   return function (req, res, next) {
     var startAt = timer();
 
@@ -62,11 +70,7 @@ function metrics(options) {
       // call to original express#res.end()
       end.apply(res, arguments);
 
-      var metricName = getMetricName(req.route, req.method);
-
-      updateMetric(CATEGORIES.all, responseTime);
-      updateMetric(CATEGORIES.status + '_' + res.statusCode, responseTime);
-      updateMetric(metricName, responseTime);
+      updateMetrics(req, res, responseTime);
     };
 
     next();
