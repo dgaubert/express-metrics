@@ -5,17 +5,19 @@
   "author": "Daniel García Aubert <danielgarciaaubert@gmail.com>",
   "main": "index.js",
   "dependencies": {
-    "metrics": "latest"
+    "metrics": "latest",
+    "on-headers": "^1.0.0"
   },
   "devDependencies": {
-    "jshint": "latest"
+    "jshint": "latest",
+    "should": "^5.1.0"
   },
   "repository": {
     "type": "git",
     "url": "git://github.com/dgaubert/express-metrics.git"
   },
   "scripts": {
-    "test": "mocha test/**/*.spec.js",
+    "test": "mocha test/**/*.spec.js --require should",
     "test:watch": "npm run test -- -w",
     "lint": "jshint *.js"
   },
