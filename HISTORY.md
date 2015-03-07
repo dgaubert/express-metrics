@@ -1,3 +1,6 @@
+## 0.5.0
+  - Improved metrics report.
+
 ## 0.4.0
   - Added header "X-Response-Time" with the response time in ms.
 
