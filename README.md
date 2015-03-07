@@ -34,45 +34,84 @@ app.get('/', function (req, res, next) {
 In /metrics path, you  will see:
 ```js
 {
-  'GET_/': {
-    type: "timer",
-    duration: {
-      type: "histogram",
-      min: 1,
-      max: 49,
-      sum: 140,
-      variance: 136.69005847953213,
-      mean: 7.368421052631579,
-      std_dev: 11.691452368270253,
-      count: 19,
-      median: 2,
-      p75: 5,
-      p95: 49,
-      p99: 49,
-      p999: 49
+  global: {
+    all: {
+      type: "timer",
+      duration: {
+        type: "histogram",
+        min: 0,
+        max: 109.713,
+        sum: 674.927,
+        variance: 239.8825911142156,
+        mean: 5.624391666666665,
+        std_dev: 15.488143565780103,
+        count: 120,
+        median: 0.8055000000000001,
+        p75: 1.738,
+        p95: 31.57105,
+        p99: 107.1568799999999,
+        p999: 109.713
+      },
+      rate: {
+        type: "meter",
+        count: 120,
+        m1: 2.2284012252758894,
+        m5: 4.550172188270242,
+        m15: 5.220474962604762,
+        mean: 1.3997597079168076,
+        unit: "seconds"
+      }
     },
-    rate: {
-      type: "meter",
-      count: 19,
-      m1: 0.09594670244481206,
-      m5: 0.019860059817214587,
-      m15: 0.007863370827271138,
-      mean: 0.008451182854240225,
-      unit: "seconds"
+    static: {
+      type: "timer",
+      duration: {
+        ...
+      },
+      rate: {
+        ...
+      }
+    }
+  },
+  status: {
+    200: {
+      ...
+    },
+    302: {
+      ...
+    },
+  },
+  method: {
+    get: {
+      ...
+    },
+    post: {
+      ...
+    },
+    ...
+  },
+  '/blog': {
+    get: {
+      ...
+    }
+  },
+  '/blog/:slug': {
+    post: {
+      ...
     }
   }
 }
 ```
 Metrics are grouped by:
-  - method and path (i.e. GET_/)
-  - response status (i.e. status_200)
-  - all requests
+  - global, all and statics (i.e. global: { all: {...}, static: {...} })
+  - code status (i.e. status: { 200: {...} })
+  - method (i.e. method: { get: {...} })
+  - path and method (i.e. '/blog': { get: {...} })
 
 If you want to do something with the collected data:
 
 ```js
 app.get('/metrics', function (req, res, next) {
-  var homeMetrics = metrics.getSummary()['GET_/']; // only home metrics
+  var homeMetrics = metrics.getSummary()['/home']; // only home metrics
   res.render('path/to/template', { home: homeMetrics });
 });
 ```
