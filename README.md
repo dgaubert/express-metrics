@@ -80,13 +80,19 @@ app.get('/metrics', function (req, res, next) {
 
 You can pass options to the middleware, like this:
 ```js
-app.use(metrics({ decimals: true }));
-
+app.use(metrics({
+  decimals: false,
+  header: false
+}));
 ```
 
 ### decimals: Boolean (default: false)
 
 If decimals is __true__, times are measured in millisecond with three decimals. Otherwise, times are rounded to milliseconds.
+
+### header: Boolean (deafult: false)
+
+If header is true, "X-Response-Time" is added as HTTP header in the response.
 
 ## Contributions
 
