@@ -1,3 +1,6 @@
+## 0.5.2
+  - Integrated Travis CI
+
 ## 0.5.0
   - Improved metrics report.
 
