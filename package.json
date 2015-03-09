@@ -6,6 +6,7 @@
   "main": "index.js",
   "dependencies": {
     "metrics": "latest",
+    "mocha": "^2.2.1",
     "on-headers": "^1.0.0"
   },
   "devDependencies": {
@@ -17,7 +18,7 @@
     "url": "git://github.com/dgaubert/express-metrics.git"
   },
   "scripts": {
-    "test": "mocha test/**/*.spec.js --require should",
+    "test": "./node_modules/mocha/bin/mocha test/**/*.spec.js --require should",
     "test:watch": "npm run test -- -w",
     "lint": "jshint *.js"
   },
