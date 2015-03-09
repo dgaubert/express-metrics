@@ -141,7 +141,7 @@ Do you want to contribute?. Please, follow the below suggestions:
   - To add features, `pull requests` to `develop` branch.
   - To fix bugs in release version, `pull request` both `master` and `develop` branches.
   - Be consistent with style and design decisions.
-  - Cover your implementation with tests, add it under `test/*-test.js`.
+  - Cover your implementation with tests, add it under `test/*.spec.js`.
 
 ## Change history
 
