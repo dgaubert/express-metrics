@@ -1,7 +1,7 @@
 {
   "name": "express-metrics",
   "description": "Express middleware for collecting and reporting metrics about response times",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "author": "Daniel García Aubert <danielgarciaaubert@gmail.com>",
   "main": "index.js",
   "dependencies": {
