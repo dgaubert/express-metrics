@@ -10,8 +10,10 @@
     "on-headers": "^1.0.0"
   },
   "devDependencies": {
+    "express": "^4.12.2",
     "jshint": "latest",
-    "should": "^5.1.0"
+    "should": "^5.1.0",
+    "supertest": "^0.15.0"
   },
   "repository": {
     "type": "git",
