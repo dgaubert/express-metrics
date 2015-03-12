@@ -1,4 +1,4 @@
-var kluster = require('./kluster');
+var kluster = require('./lib/kluster');
 var chrono = require('./lib/chrono');
 var metrics = require('./lib/metrics');
 var header = require('./lib/header');
@@ -25,7 +25,10 @@ function expressMetrics(options) {
       // call to original express#res.end()
       end.apply(res, arguments);
 
-      kluster.send(req.route, req.method, res.statusCode, responseTime);
+      if (kluster.isEnabled()) {
+        kluster.send(req.route, req.method, res.statusCode, responseTime);
+      }
+
       metrics.update(req.route, req.method, res.statusCode, responseTime);
     };
 
@@ -38,6 +41,7 @@ function getSummary() {
 }
 
 function jsonSummary(req, res) {
+  console.log('responding', process.pid);
   res.json(getSummary());
 }
 
