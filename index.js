@@ -1,11 +1,16 @@
+var kluster = require('./kluster');
 var chrono = require('./lib/chrono');
 var metrics = require('./lib/metrics');
 var header = require('./lib/header');
 
 function expressMetrics(options) {
   options = (typeof options === 'undefined') ? {} : options;
-  chrono.init({ decimals: options.decimals });
-  header.init({ header: options.header} );
+  chrono.init({
+    decimals: options.decimals
+  });
+  header.init({
+    header: options.header
+  });
 
   return function (req, res, next) {
     chrono.start();
@@ -20,7 +25,8 @@ function expressMetrics(options) {
       // call to original express#res.end()
       end.apply(res, arguments);
 
-      metrics.update(req, res.statusCode, responseTime);
+      kluster.send(req.route, req.method, res.statusCode, responseTime);
+      metrics.update(req.route, req.method, res.statusCode, responseTime);
     };
 
     next();
@@ -38,3 +44,4 @@ function jsonSummary(req, res) {
 module.exports = expressMetrics;
 module.exports.getSummary = getSummary;
 module.exports.jsonSummary = jsonSummary;
+module.exports.initClusterMode = kluster.initCluster;
