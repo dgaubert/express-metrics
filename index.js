@@ -48,4 +48,3 @@ function jsonSummary(req, res) {
 module.exports = expressMetrics;
 module.exports.getSummary = getSummary;
 module.exports.jsonSummary = jsonSummary;
-module.exports.initClusterMode = kluster.initCluster;

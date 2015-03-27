@@ -23,8 +23,6 @@ module.exports = function (callback) {
       worker.on('message', msgReceived);
     }
 
-    metrics.initClusterMode();
-
   } else {
 
     app = express();
