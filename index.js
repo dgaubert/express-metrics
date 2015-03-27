@@ -24,11 +24,7 @@ function expressMetrics(options) {
 
       // call to original express#res.end()
       end.apply(res, arguments);
-
-      if (kluster.isEnabled()) {
-        kluster.send(req.route, req.method, res.statusCode, responseTime);
-      }
-
+      
       metrics.update(req.route, req.method, res.statusCode, responseTime);
     };
 
