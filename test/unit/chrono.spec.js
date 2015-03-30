@@ -1,6 +1,6 @@
-var chrono = require('../lib/chrono');
+var chrono = require('../../lib/chrono');
 
-describe('Test suite for chrono module', function () {
+describe('Chrono', function () {
   it('module should be loaded properly', function () {
     chrono.should.Object;
     chrono.init.should.Function;

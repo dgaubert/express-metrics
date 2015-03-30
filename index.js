@@ -1,6 +1,5 @@
 'use strict';
 
-var cluster = require('cluster');
 var MetricsClient = require('./lib/metrics.client');
 var MetricsServer = require('./lib/metrics.server');
 var SingleClientMessagePasser = require('./lib/single.client.message.passer');
@@ -11,43 +10,34 @@ var header = require('./lib/header');
 var chrono = require('./lib/chrono');
 
 var metricsServer;
-var messagePasser;
+var messagePasserServer;
+var messagePasserClient;
 var metricsClient;
 
-function isSingle() {
-  return cluster.isMaster && !Object.keys(cluster.workers).length;
-}
+module.exports = function expressMetrics(options) {
 
-function initServer(port) {
-  metricsServer = new MetricsServer(port);
+  metricsServer = null;
+  messagePasserServer = null;
+  messagePasserClient = null;
+  metricsClient = null;
 
-  if (isSingle()) {
-    messagePasser = new SingleServerMessagePasser(metricsServer);
-  } else {
-    messagePasser = new ClusterServerMessagePasser(metricsServer);
-  }
-}
+  options = options || {};
+  options.cluster = options.cluster || false;
+  options.header = options.header || false;
+  options.decimals = options.decimals || false;
 
-function initClient() {
-  if (isSingle()) {
-    messagePasser = new SingleClientMessagePasser(metricsServer);
-  } else {
-    messagePasser = new ClusterClientMessagePasser();
+  if (!options.cluster && !options.port) {
+    throw new TypeError('Mandatory option port when cluster is disabled.');
   }
 
-  metricsClient = new MetricsClient(messagePasser);
-}
+  if (!options.cluster && options.port) {
+    initServer(options.port, false);
+  }
 
-var serve = function serve(port) {
-  initServer(port);
-};
+  initClient(options.cluster);
 
-var monitor = function monitor(options) {
-  options = (typeof options === 'undefined') ? {} : options;
   header.init({ header: options.header });
   chrono.init({ decimals: options.decimals });
-
-  initClient();
 
   return function (req, res, next) {
     chrono.start();
@@ -75,7 +65,32 @@ var monitor = function monitor(options) {
 
 };
 
-module.exports = {
-  serve: serve,
-  monitor: monitor
+module.exports.listen = function listen(port) {
+  return initServer(port, true);
 };
+
+module.exports.close = function close(callback) {
+  metricsServer.stop(callback);
+};
+
+function initServer(port, isCluster) {
+  metricsServer = new MetricsServer(port);
+
+  if (isCluster) {
+    messagePasserServer = new ClusterServerMessagePasser(metricsServer);
+  } else {
+    messagePasserServer = new SingleServerMessagePasser(metricsServer);
+  }
+
+  return metricsServer.server;
+}
+
+function initClient(isCluster) {
+  if (isCluster) {
+    messagePasserClient = new ClusterClientMessagePasser();
+  } else {
+    messagePasserClient = new SingleClientMessagePasser(messagePasserServer);
+  }
+
+  metricsClient = new MetricsClient(messagePasserClient);
+}
