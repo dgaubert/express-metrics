@@ -6,34 +6,34 @@ Express middleware for collecting and reporting metrics about response times.
 
 ## Installation
 
-Node.js, on project path:
+On project path:
 
 ```
 npm install express-metrics --save
 ```
 
-## Examples
+## Example
 
-Node projects:
+Express projects:
 
 ```js
 var express = require('express');
-var metrics = require('express-metrics');
+var expressMetrics = require('express-metrics');
 var app = express();
 
-app.use(metrics());
+// start a metrics server
+app.use(expressMetrics({
+  port: 8091
+});
 
-// it responds a JSON with a summary of metrics
-app.get('/metrics', metrics.jsonSummary);
-
-// every time this handler returns the greet, the middleware
+// every time this handler returns the greet, express-metrics
 // will update the metrics with the calculated response time
 app.get('/', function (req, res, next) {
   res.json({ greet: 'Hello world!' });
 });
 ```
 
-In /metrics path, you  will see:
+In _:8091/metrics_:
 ```js
 {
   global: {
@@ -47,7 +47,7 @@ In /metrics path, you  will see:
         variance: 239.8825911142156,
         mean: 5.624391666666665,
         std_dev: 15.488143565780103,
-        count: 120,
+        count: 1,
         median: 0.8055000000000001,
         p75: 1.738,
         p95: 31.57105,
@@ -56,7 +56,7 @@ In /metrics path, you  will see:
       },
       rate: {
         type: "meter",
-        count: 120,
+        count: 1,
         m1: 2.2284012252758894,
         m5: 4.550172188270242,
         m15: 5.220474962604762,
@@ -109,23 +109,20 @@ Metrics are grouped by:
   - method (i.e. method: { get: {...} })
   - path and method (i.e. '/blog': { get: {...} })
 
-If you want to do something with the collected data:
-
-```js
-app.get('/metrics', function (req, res, next) {
-  var homeMetrics = metrics.getSummary()['/home']; // only home metrics
-  res.render('path/to/template', { home: homeMetrics });
-});
-```
 ## Options
 
-You can pass options to the middleware, like this:
+Example using all options with its default values:
 ```js
-app.use(metrics({
+app.use(expressMetrics({
+  port: 8091,
+  cluster: false,
   decimals: false,
   header: false
 }));
 ```
+### port: Number (default: undefined)
+
+Only used when cluster option is false, start a metrics servers on the same process that the application is running.
 
 ### decimals: Boolean (default: false)
 
@@ -133,7 +130,44 @@ If decimals is __true__, times are measured in millisecond with three decimals. 
 
 ### header: Boolean (deafult: false)
 
-If header is true, "X-Response-Time" is added as HTTP header in the response.
+If header is __true__, "X-Response-Time" is added as HTTP header in the response.
+
+### cluster: Boolean (default: false)
+
+If cluster is __true__, delegate the start of the metrics server to master process. Due to this, express-metrics provides one way to run a metrics server in master, i.e:
+
+```js
+var cluster = require('cluster');
+var express = require('express');
+var expressMetrics = require('express-metrics');
+var numCPUs = require('os').cpus().length;
+
+if (cluster.isMaster) {
+  // Fork workers.
+  for (var i = 0; i < numCPUs; i++) {
+    cluster.fork();
+  }
+
+  // start a metrics server on master process
+  expressMetrics.listen(8091);
+} else {
+  var app = express();
+
+  // with cluster option set to true says to the express-metrics that
+  // it must send the measured times to master process
+  app.use(expressMetrics({
+    cluster: true
+  });
+
+  app.get('/', function (req, res, next) {
+    res.json({ greet: 'Hello world!' });
+  });
+
+  app.listen(8090);
+}
+```
+
+When one request is handled by one worker, express-metrics measures the response time and send it to the master. Then, master receives the data and updates the corresponding metrics. Furthermore, master exposes the metrics on port previously configured.
 
 ## Contributions
 

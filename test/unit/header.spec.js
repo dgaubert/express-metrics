@@ -1,6 +1,6 @@
-var header = require('../lib/header');
+var header = require('../../lib/header');
 
-describe('Test suite for header module', function () {
+describe('Header', function () {
   it('module should be loaded properly', function () {
     header.should.Object;
     header.init.should.Function;

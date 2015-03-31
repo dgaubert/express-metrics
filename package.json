@@ -1,7 +1,7 @@
 {
   "name": "express-metrics",
   "description": "Express middleware for collecting and reporting metrics about response times",
-  "version": "0.5.3",
+  "version": "1.0.0",
   "author": "Daniel García Aubert <danielgarciaaubert@gmail.com>",
   "main": "index.js",
   "dependencies": {
@@ -10,8 +10,12 @@
     "on-headers": "^1.0.0"
   },
   "devDependencies": {
+    "express": "^4.12.2",
     "jshint": "latest",
-    "should": "^5.1.0"
+    "q": "^1.2.0",
+    "request": "^2.53.0",
+    "should": "^5.1.0",
+    "supertest": "^0.15.0"
   },
   "repository": {
     "type": "git",
@@ -27,7 +31,9 @@
     "express",
     "middleware",
     "metrics",
-    "statsd"
+    "cluster",
+    "response",
+    "times"
   ],
   "bugs": {
     "url": "https://github.com/dgaubert/express-metrics/issues"
