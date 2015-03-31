@@ -9,14 +9,12 @@ describe('Middleware in cluster mode', function () {
     });
   });
 
-  describe('when makes a request to root path at first time', function () {
+  describe('when makes a request nine times to root path', function () {
 
     before(function (done) {
-      Q.all([
-          Quest.get({ url: 'http://localhost:4000/', json: true }),
-          Quest.get({ url: 'http://localhost:4000/', json: true }),
-          Quest.get({ url: 'http://localhost:4000/', json: true })
-        ])
+      Q.all([ 1, 2, 3, 4, 5, 6, 7, 8, 9 ].map(function (/* index */) {
+          return Quest.get({ url: 'http://localhost:4000/', json: true });
+        }))
         .then(function (/*result*/) {
           done();
         })
@@ -25,10 +23,10 @@ describe('Middleware in cluster mode', function () {
         });
     });
 
-    it('.summary should return an object with default metrics', function (done) {
+    it('server should report metrics with count rate equal to 9', function (done) {
       Quest.get({ url: 'http://localhost:4001/metrics', json: true })
         .then(function (result) {
-          result.global.all.rate.count.should.be.equal(3);
+          result.global.all.rate.count.should.be.equal(9);
           done();
         })
         .fail(function (err) {
