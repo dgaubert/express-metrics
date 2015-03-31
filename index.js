@@ -1,11 +1,20 @@
-var chrono = require('./lib/chrono');
-var metrics = require('./lib/metrics');
-var header = require('./lib/header');
+'use strict';
 
-function expressMetrics(options) {
-  options = (typeof options === 'undefined') ? {} : options;
+var builder = require('./lib/builder');
+var header = require('./lib/header');
+var chrono = require('./lib/chrono');
+var optionsChecker = require('./lib/options.checker');
+
+module.exports = function expressMetrics(options) {
+  var client;
+
+  options = optionsChecker.check(options);
+
+  builder.init(options);
+  client = builder.getClient();
+
+  header.init({ header: options.header });
   chrono.init({ decimals: options.decimals });
-  header.init({ header: options.header} );
 
   return function (req, res, next) {
     chrono.start();
@@ -20,21 +29,27 @@ function expressMetrics(options) {
       // call to original express#res.end()
       end.apply(res, arguments);
 
-      metrics.update(req, res.statusCode, responseTime);
+      client.send({
+        route: req.route,
+        method: req.method,
+        status: res.statusCode,
+        time: responseTime
+      });
     };
 
     next();
   };
-}
 
-function getSummary() {
-  return metrics.summary();
-}
+};
 
-function jsonSummary(req, res) {
-  res.json(getSummary());
-}
+module.exports.listen = function listen(port) {
+  if (builder.getServer()) {
+    return builder.getMetricsServer();
+  }
 
-module.exports = expressMetrics;
-module.exports.getSummary = getSummary;
-module.exports.jsonSummary = jsonSummary;
+  return builder.startServer(port);
+};
+
+module.exports.close = function close(callback) {
+  builder.getServer().stop(callback);
+};
