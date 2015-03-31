@@ -1,6 +1,7 @@
 var Q = require('q');
 var Quest = require('../util/quest');
 var appLauncher = require('../util/app.launcher.js');
+var arrayGenerator = require('../util/array.generator.js');
 
 describe('Middleware in single thread mode', function () {
 
@@ -13,7 +14,7 @@ describe('Middleware in single thread mode', function () {
   describe('when makes a request nine times to root path', function () {
 
     before(function (done) {
-      Q.all([ 1, 2, 3, 4, 5, 6, 7, 8, 9 ].map(function (/* index */) {
+      Q.all(arrayGenerator.generate(9).map(function (/* index */) {
           return Quest.get({ url: 'http://localhost:3000/', json: true });
         }))
         .then(function () {

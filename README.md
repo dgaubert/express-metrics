@@ -2,17 +2,17 @@
 
 [![Build Status](https://travis-ci.org/dgaubert/express-metrics.svg?branch=master)](https://travis-ci.org/dgaubert/express-metrics)
 
-Express middleware for collecting and reporting metrics about application response times.
+Express middleware for collecting and reporting metrics about response times.
 
 ## Installation
 
-Node.js, on project path:
+On project path:
 
 ```
 npm install express-metrics --save
 ```
 
-## Examples
+## Example
 
 Express projects:
 
@@ -33,7 +33,7 @@ app.get('/', function (req, res, next) {
 });
 ```
 
-In _:8091/metrics_, you  will see something like this:
+In _:8091/metrics_:
 ```js
 {
   global: {
@@ -111,7 +111,7 @@ Metrics are grouped by:
 
 ## Options
 
-You can pass options to express-metrics:
+Example using all options with its default values:
 ```js
 app.use(expressMetrics({
   port: 8091,
@@ -122,7 +122,7 @@ app.use(expressMetrics({
 ```
 ### port: Number (default: undefined)
 
-Only used when cluster option is false, start a metrics servers on the same process that your server is running.
+Only used when cluster option is false, start a metrics servers on the same process that the application is running.
 
 ### decimals: Boolean (default: false)
 
@@ -130,11 +130,11 @@ If decimals is __true__, times are measured in millisecond with three decimals. 
 
 ### header: Boolean (deafult: false)
 
-If header is true, "X-Response-Time" is added as HTTP header in the response.
+If header is __true__, "X-Response-Time" is added as HTTP header in the response.
 
 ### cluster: Boolean (default: false)
 
-If is true, delegate the start of the metrics server to master process. Due to this, express-metrics provides one way to run a metrics server in master process, for example:
+If cluster is __true__, delegate the start of the metrics server to master process. Due to this, express-metrics provides one way to run a metrics server in master, i.e:
 
 ```js
 var cluster = require('cluster');
@@ -166,6 +166,8 @@ if (cluster.isMaster) {
   app.listen(8090);
 }
 ```
+
+When one request is handled by one worker, express-metrics measures the response time and send it to the master. Then, master receives the data and updates the corresponding metrics. Furthermore, master exposes the metrics on port previously configured.
 
 ## Contributions
 
