@@ -31,7 +31,9 @@
     "express",
     "middleware",
     "metrics",
-    "statsd"
+    "cluster",
+    "response",
+    "times"
   ],
   "bugs": {
     "url": "https://github.com/dgaubert/express-metrics/issues"
