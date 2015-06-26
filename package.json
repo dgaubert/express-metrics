@@ -5,9 +5,12 @@
   "author": "Daniel García Aubert <danielgarciaaubert@gmail.com>",
   "main": "index.js",
   "dependencies": {
+    "log4js": "^0.6.26",
     "metrics": "latest",
     "mocha": "^2.2.1",
-    "on-headers": "^1.0.0"
+    "node-statsd": "^0.1.1",
+    "on-headers": "^1.0.0",
+    "winston": "^1.0.0"
   },
   "devDependencies": {
     "express": "^4.12.2",

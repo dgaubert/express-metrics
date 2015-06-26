@@ -128,9 +128,28 @@ Only used when cluster option is false, start a metrics servers on the same proc
 
 If decimals is __true__, times are measured in millisecond with three decimals. Otherwise, times are rounded to milliseconds.
 
-### header: Boolean (deafult: false)
+### header: Boolean (default: false)
 
 If header is __true__, "X-Response-Time" is added as HTTP header in the response.
+
+### statsd: Object (default: undefined)
+
+Optionally you can send the metrics to statsd. In order to do that you just need to provide the statsd config in the options.
+
+```js
+
+
+  app.use(expressMetrics({
+    statsd: {
+      'host': 'localhost',
+      'port': 8125,
+      'prefix': require('os').hostname() + '.myService'
+    }
+  });
+
+
+```
+
 
 ### cluster: Boolean (default: false)
 
