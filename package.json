@@ -18,7 +18,8 @@
     "q": "^1.2.0",
     "request": "^2.53.0",
     "should": "^5.1.0",
-    "supertest": "^0.15.0"
+    "supertest": "^0.15.0",
+    "sinon": "^1.15.3"
   },
   "repository": {
     "type": "git",
