@@ -199,6 +199,10 @@ if (cluster.isMaster) {
 
 When one request is handled by one worker, express-metrics measures the response time and send it to the master. Then, master receives the data and updates the corresponding metrics. Furthermore, master exposes the metrics on port previously configured.
 
+## Logging
+Logs are sent to 'express-metrics' log4js logger.
+
+
 ## Contributions
 
 Do you want to contribute?. Please, follow the below suggestions:
