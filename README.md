@@ -135,6 +135,10 @@ If header is __true__, "X-Response-Time" is added as HTTP header in the response
 ### statsd: Object (default: undefined)
 
 Optionally you can send the metrics to statsd. In order to do that you just need to provide the statsd config in the options.
+Thanks to metrics you are able to explore at any time if there is something wierd in your application. And with statsd you are able to collect
+stats for you more representative resources.
+
+Example:
 
 ```js
 
@@ -144,11 +148,18 @@ Optionally you can send the metrics to statsd. In order to do that you just need
       'host': 'localhost',
       'port': 8125,
       'prefix': require('os').hostname() + '.myService'
+      'routes': {
+        'showUserCampaigns': [{ path: '/campaigns/:userId/lite', methods: ['get']}],
+        'showCampaign':  [{ path: '/campaign/:campaignId', methods: ['get']}],
+        'showUserShops': { path: '/shop/:userId', method: 'get'}
+      }
     }
   });
 
 
 ```
+
+Just the routes that you indicate in the 'routes' option will be sent to statsd.
 
 
 ### cluster: Boolean (default: false)
