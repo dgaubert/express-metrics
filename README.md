@@ -128,9 +128,39 @@ Only used when cluster option is false, start a metrics servers on the same proc
 
 If decimals is __true__, times are measured in millisecond with three decimals. Otherwise, times are rounded to milliseconds.
 
-### header: Boolean (deafult: false)
+### header: Boolean (default: false)
 
 If header is __true__, "X-Response-Time" is added as HTTP header in the response.
+
+### statsd: Object (default: undefined)
+
+Optionally you can send the metrics to statsd. In order to do that you just need to provide the statsd config in the options.
+Thanks to metrics you are able to explore at any time if there is something wierd in your application. And with statsd you are able to collect
+stats for you more representative resources.
+
+Example:
+
+```js
+
+
+  app.use(expressMetrics({
+    statsd: {
+      'host': 'localhost',
+      'port': 8125,
+      'prefix': require('os').hostname() + '.myService'
+      'routes': {
+        'showUserCampaigns': [{ path: '/campaigns/:userId/lite', methods: ['get']}],
+        'showCampaign':  [{ path: '/campaign/:campaignId', methods: ['get']}],
+        'showUserShops': { path: '/shop/:userId', method: 'get'}
+      }
+    }
+  });
+
+
+```
+
+Just the routes that you indicate in the 'routes' option will be sent to statsd.
+
 
 ### cluster: Boolean (default: false)
 
@@ -168,6 +198,10 @@ if (cluster.isMaster) {
 ```
 
 When one request is handled by one worker, express-metrics measures the response time and send it to the master. Then, master receives the data and updates the corresponding metrics. Furthermore, master exposes the metrics on port previously configured.
+
+## Logging
+Logs are sent to 'express-metrics' log4js logger.
+
 
 ## Contributions
 
