@@ -1,12 +1,14 @@
 {
   "name": "express-metrics",
   "description": "Express middleware for collecting and reporting metrics about response times",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "author": "Daniel García Aubert <danielgarciaaubert@gmail.com>",
   "main": "index.js",
   "dependencies": {
+    "log4js": "^0.6.26",
     "metrics": "latest",
     "mocha": "^2.2.1",
+    "node-statsd": "^0.1.1",
     "on-headers": "^1.0.0"
   },
   "devDependencies": {
@@ -15,7 +17,8 @@
     "q": "^1.2.0",
     "request": "^2.53.0",
     "should": "^5.1.0",
-    "supertest": "^0.15.0"
+    "supertest": "^0.15.0",
+    "sinon": "^1.15.3"
   },
   "repository": {
     "type": "git",

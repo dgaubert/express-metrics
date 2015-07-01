@@ -17,5 +17,11 @@ describe('Express Metrics', function () {
         expressMetrics({ cluster: false });
       }).should.throw();
     });
+
+    it('when statsd is set when when missing a parameter an exception is thrown', function () {
+      (function (){
+        expressMetrics({ statsd: {port: 8125} });
+      }).should.throw();
+    });
   });
 });
