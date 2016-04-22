@@ -154,7 +154,7 @@ Example:
         'showUserShops': { path: '/shop/:userId', method: 'get'}
       }
     }
-  });
+  }));
 
 
 ```
