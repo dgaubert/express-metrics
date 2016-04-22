@@ -187,7 +187,7 @@ if (cluster.isMaster) {
   // it must send the measured times to master process
   app.use(expressMetrics({
     cluster: true
-  });
+  }));
 
   app.get('/', function (req, res, next) {
     res.json({ greet: 'Hello world!' });
