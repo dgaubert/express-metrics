@@ -147,7 +147,7 @@ Example:
     statsd: {
       'host': 'localhost',
       'port': 8125,
-      'prefix': require('os').hostname() + '.myService'
+      'prefix': require('os').hostname() + '.myService',
       'routes': {
         'showUserCampaigns': [{ path: '/campaigns/:userId/lite', methods: ['get']}],
         'showCampaign':  [{ path: '/campaign/:campaignId', methods: ['get']}],
