@@ -24,7 +24,7 @@ var app = express();
 // start a metrics server
 app.use(expressMetrics({
   port: 8091
-});
+}));
 
 // every time this handler returns the greet, express-metrics
 // will update the metrics with the calculated response time
